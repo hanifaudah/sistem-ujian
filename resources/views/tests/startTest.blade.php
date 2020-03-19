@@ -18,7 +18,7 @@
                             @endfor
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h4>{{$index+1}}. {{$problem->question}}</h4>
+                            <h4>{{$index+1}}. {!! $problem->question !!}</h4>
                             <form action="/storeGrade/{{$test_id}}/{{$problem->id}}/{{$index}}" method="POST">
                               @csrf
                               @foreach (json_decode($problem->choices) as $choice)

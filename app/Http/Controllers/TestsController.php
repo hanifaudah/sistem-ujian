@@ -45,14 +45,12 @@ class TestsController extends Controller
             $request,
             [
                 'name' => 'required',
-                'numOfQuestions' => 'required',
                 'duration' => 'required'
             ]
         );
         //Initialize Test
         $test = new Test();
         $test->name = request('name');
-        $test->numberOfQuestions = request('numOfQuestions');
         $test->duration = (int)request('duration');
 
         //Save Test
@@ -126,8 +124,10 @@ class TestsController extends Controller
         $selected = "";
         $user = auth()->user();
         $test_score_set = json_decode($user->testScore, true);
-        if (array_key_exists($problem->id, $test_score_set[$test_id])) {
-            $selected = $test_score_set[$test_id][$problem->id];
+        if (array_key_exists($test_id, $test_score_set)) {
+            if (array_key_exists($problem->id, $test_score_set[$test_id])) {
+                $selected = $test_score_set[$test_id][$problem->id];
+            }
         }
 
         return view(

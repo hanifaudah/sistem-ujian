@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTestScoreToUsersTable extends Migration
+class RemoveNumberOfQuestionFromTestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddTestScoreToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->json('testScore')->default(json_encode([]));
+        Schema::table('tests', function (Blueprint $table) {
+            $table->dropColumn('numberOfQuestions');
         });
     }
 
@@ -25,8 +25,8 @@ class AddTestScoreToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropIfExists('testScore');
+        Schema::table('tests', function (Blueprint $table) {
+            $table->integer('numberOfQuestions');
         });
     }
 }

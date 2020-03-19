@@ -13,7 +13,7 @@
                     @foreach ($problems as $problem)
                       <div class="card bg-light p-2 my-3 d-flex flex-row justify-content-between">
                         <div>
-                          <a href="/problems/{{$problem->id}}/{{$loop->index+1}}">{{ $loop->index+1 }}. {{$problem->question}}</a>
+                          <a href="/problems/{{$problem->id}}/{{$loop->index+1}}">{{ $loop->index+1 }}. {!! $problem->question !!}</a>
                         </div>
                         <div class="d-flex justify-content-center align-items-center">
                           <a class="btn btn-outline-secondary mr-3" href="/problems/{{$problem->id}}/edit">Edit Question</a>

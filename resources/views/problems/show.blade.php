@@ -19,7 +19,7 @@
                             @endfor
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h4>{{$problem->question}}</h4>
+                            <h4>{!! $problem->question !!}</h4>
                             <form action="" method="POST">
                               @foreach (json_decode($problem->choices) as $choice)
                                 <input type="radio" id="{{$loop->index}}" name="choices">
