@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Test Control Panel')
 @section('content')
 <div class="container">
     <div class="justify-content-center">
@@ -13,16 +13,16 @@
                     @foreach ($tests as $test)
                       <div class="card bg-light p-2 my-3 d-flex flex-row justify-content-between">
                         <div>
-                          <h5>{{$test->name}}</h5>
+                          <h5><a href="/tests/{{$test->id}}">{{$test->name}}</a></h5>
                           <small>Duration: {{$test->duration}}</small>
-                          <small>Questions: {{$test->numberOfQuestions}}</small>
+                          <small>Questions: {{count(App\Problem::where('test_id', $test->id)->get())}}</small>
                         </div>
                         <div class="d-flex justify-content-center align-items-center">
                           <a class="btn btn-outline-secondary mr-3" href="/tests/{{$test->id}}">Edit Problems</a>
                           <form action="/tests/{{$test->id}}" method="POST">
-                            @csrf 
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                              @csrf 
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-danger">Delete</button>
                           </form>
                         </div>
                       </div>

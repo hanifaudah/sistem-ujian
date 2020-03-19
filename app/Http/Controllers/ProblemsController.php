@@ -77,9 +77,11 @@ class ProblemsController extends Controller
      * @param  \App\Problem  $problem
      * @return \Illuminate\Http\Response
      */
-    public function edit(Problem $problem)
+    public function edit($id)
     {
-        //
+        $problem = Problem::find($id);
+        $choices = json_decode($problem->choices);
+        return view('problems.edit', ['problem' => $problem , 'choices' => $choices]);
     }
 
     /**
@@ -89,9 +91,26 @@ class ProblemsController extends Controller
      * @param  \App\Problem  $problem
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Problem $problem)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate (
+            $request,
+            [
+                'question' => 'required',
+                'choices' => 'required',
+                'answer' => 'required'
+            ]
+        );
+
+        $problem = Problem::find($id);
+        $problem->question = request('question');
+        $problem->choices = json_encode(request('choices'));
+        $problem->answer = request('answer');
+
+        //Save
+        $problem->save();
+
+        return redirect("/tests/$problem->test_id")->with('success', 'Question Updated');
     }
 
     /**
@@ -102,6 +121,6 @@ class ProblemsController extends Controller
      */
     public function destroy(Problem $problem)
     {
-        //
+        
     }
 }

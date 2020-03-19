@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Test;
 use App\Problem;
+use App\User;
 use Illuminate\Http\Request;
 
 class TestsController extends Controller
@@ -38,6 +39,7 @@ class TestsController extends Controller
      */
     public function store(Request $request)
     {
+        $users = User::all();
         //Validate
         $this->validate (
             $request,
@@ -107,5 +109,84 @@ class TestsController extends Controller
         $test->delete();
 
         return redirect('/tests')->with('success', 'Test Deleted');
+    }
+
+    public function takeTest($id) {
+        $test = Test::find($id);
+        return view('tests.takeTest' , ['test' => $test]);
+    }
+
+    public function startTest($test_id, $problem_index) {
+        $test = Test::find($test_id);
+        $problem_set = ($test->problem_set());
+        $count = count($problem_set);
+        $problem = $problem_set[$problem_index];
+
+        //Check if Checked
+        $selected = "";
+        $user = auth()->user();
+        $test_score_set = json_decode($user->testScore, true);
+        if (array_key_exists($problem->id, $test_score_set[$test_id])) {
+            $selected = $test_score_set[$test_id][$problem->id];
+        }
+
+        return view(
+            'tests.startTest', 
+            [
+            'problem' => $problem, 
+            'index' => $problem_index, 
+            'count' => $count,
+            'test_id' => $test_id,
+            'selected' => $selected,
+            ]
+        );
+    }
+
+    public function storeGrade(Request $request, $test_id, $problem_id, $index) {
+        $this->validate(
+            $request,
+            [
+            'choices' => 'required',
+            ]
+        );
+
+        $problem = Problem::find($problem_id);
+        $test = Test::find($problem->test_id);
+        $isCorrect = false;
+        $user = auth()->user();
+        $answer = request('choices');
+
+        //Count
+        $problem_set = ($test->problem_set());
+        $count = count($problem_set);
+
+        //Check answer
+        // $isCorrect = ($answer == $problem->answer);
+
+        //Add answer to user
+        $test_score_set = json_decode($user->testScore, true);
+        $test_score_set[$test->id][$problem->id] = $answer;
+
+        $user->testScore = json_encode($test_score_set);
+        $user->save();
+
+        $index += ($index < $count-1) ? 1 : 0;
+        return redirect("/startTest/$test->id/$index");
+    }
+
+    public function testResult($test_id) {
+        $test = Test::find($test_id);
+        $user = auth()->user();
+        $sum = 0;
+        $toBeGraded = json_decode($user->testScore, true)[$test_id];
+        foreach ($toBeGraded as $problem_id => $answer) {
+            $problem = Problem::find($problem_id);
+            if ($problem->answer == $answer) {
+                $sum++;
+            }
+        }
+
+        $score = $sum / count($test->problem_set()) * 100;
+        return view('tests.result', ['grade' => $score, 'test' => $test]);
     }
 }

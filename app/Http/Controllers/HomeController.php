@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Test;
 
 class HomeController extends Controller
 {
@@ -24,6 +25,7 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-        return view('home', ['user' => $user]);
+        $tests = Test::all();
+        return view('home', ['user' => $user , 'tests' => $tests]);
     }
 }

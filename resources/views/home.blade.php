@@ -16,6 +16,16 @@
                             </div>
                             <div class="col-12 col-lg-9">
                                 <h1>Available Tests</h1>
+                                @foreach ($tests as $test)
+                                    <div class="card bg-light p-2 my-3 d-flex flex-row justify-content-between align-items-center">
+                                        <div>
+                                            <h5><a href="/takeTest/{{$test->id}}">{{$test->name}}</a></h5>
+                                            <small>Duration: {{$test->duration}}</small>
+                                            <small>Questions: {{count(App\Problem::where('test_id', $test->id)->get())}}</small>
+                                        </div>
+                                        <a href="/takeTest/{{$test->id}}" class="btn btn-outline-success">Take Test</a>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

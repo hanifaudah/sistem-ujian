@@ -9,21 +9,27 @@ form textarea {
 }
 
 .question-tab {
-  background: grey;
-  border: 2px solid rgba(200,200,200,1);
-  width: 2em;
+  background: rgba(200,200,200,1);
+  border: 1px solid grey;
+  border-radius: 5px;
   text-align:center;
-  color: white;
-  margin:0;
+  color: grey;
+  margin-right: .5em;
+  padding: .2em .5em;
+  display: inline;
+  font-weight: bold;
 }
 
-.question-tab-current {
+.question-tab:hover {
+  text-decoration: none;
+}
+
+.current {
   border: 2px solid rgba(200,200,200,1);
   width: 2em;
   text-align:center;
   color: white;
-  margin:0;
-  background: green;
+  background: green !important;
 }
 
 /* End of My CSS */
